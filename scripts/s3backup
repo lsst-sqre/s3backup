@@ -13,10 +13,20 @@ fail() {
   exit $code
 }
 
+run() {
+  if [[ $DRYRUN == true ]]; then
+    echo "$@"
+  elif [[ $DEBUG == true ]]; then
+    (set -x; "$@")
+  else
+    "$@"
+  fi
+}
+
 # use UTC for timestamps
 datecmd() {
   # shellcheck disable=SC2068
-  date --utc $@
+  run date --utc $@
 }
 
 check_vars() {
@@ -62,18 +72,12 @@ backup_path() {
 # http://stackoverflow.com/questions/1527049/join-elements-of-an-array#17841619
 join() { local IFS="$1"; shift; echo "$*"; }
 
-cmd=''
-if [[ $DRYRUN == true ]]; then
-  cmd='echo'
-fi
-
 check_vars
 # shellcheck disable=SC2086
 src="s3://$(join '/' $S3_SRC_BUCKET $S3_SRC_PREFIX)"
 # shellcheck disable=SC2086
 dst="s3://$(join '/' $S3_BACKUP_BUCKET $S3_BACKUP_PREFIX "$(backup_path)")"
 
-#set -x
-$cmd aws s3 sync "$src" "$dst"
+run aws s3 sync "$src" "$dst"
 
 # vim: tabstop=2 shiftwidth=2 expandtab

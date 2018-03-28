@@ -78,3 +78,7 @@ value of `foobar` would result in objects being copied under the path
 * `DRYRUN`
 
 Noop / print commands that would be normally be executed.
+
+* `DEBUG`
+
+Enable `bash` `xtrace` when calling external programs.
