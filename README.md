@@ -10,7 +10,7 @@ intended to allow multiple backups to be made into the same "backup" bucket
 over a period of time.
 
 Usage
-===
+---
 
 __The "source" and "backup" buckets must exist before this container will
 function.__
@@ -33,7 +33,7 @@ docker run \
 Would result in recursive copy of all objects under `s3://example.org` to `s3://example.org-backup/2017/04/28/2017-04-28T20:24:26Z`.
 
 Env Vars
-===
+---
 
 A number of environment variables are supported to configure the backup
 operation.  Several of this are required/mandatory for operation while a few
@@ -78,3 +78,7 @@ value of `foobar` would result in objects being copied under the path
 * `DRYRUN`
 
 Noop / print commands that would be normally be executed.
+
+* `DEBUG`
+
+Enable `bash` `xtrace` when calling external programs.
