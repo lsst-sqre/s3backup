@@ -34,15 +34,15 @@ check_vars() {
   )
 
   local err
-  for v in ${req_vars[*]}; do
-    eval "[[ -z \"\$$v\" ]]" && err="${err}Missing required env variable: $v\n"
+  for v in "${req_vars[@]}"; do
+    [[ ! -v $v ]] && err="${err}Missing required env variable: ${v}\n"
   done
 
   [[ -n $err ]] && fail "$err"
 
   # FYI / non-fatal
-  for v in ${opt_vars[*]}; do
-    eval "[[ -z \"\$$v\" ]]" && print_error "Missing optional env variable: $v"
+  for v in "${opt_vars[@]}"; do
+    [[ ! -v $v ]] && print_error "Missing optional env variable: ${v}"
   done
 
   # need explicit return status incase the last -z check returns 1
