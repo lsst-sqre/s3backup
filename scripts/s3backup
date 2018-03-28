@@ -75,3 +75,5 @@ dst="s3://$(join '/' $S3_BACKUP_BUCKET $S3_BACKUP_PREFIX "$(backup_path)")"
 
 #set -x
 $cmd aws s3 sync "$src" "$dst"
+
+# vim: tabstop=2 shiftwidth=2 expandtab
