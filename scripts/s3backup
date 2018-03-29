@@ -23,6 +23,26 @@ run() {
   fi
 }
 
+# based on example from:
+# https://unix.stackexchange.com/questions/82598/how-do-i-write-a-retry-logic-in-script-to-keep-retrying-to-run-it-upto-5-times/82610
+retry() {
+  local n=1
+  local max=5
+  local delay=15
+
+  while true; do
+    if "$@"; then
+      break
+    elif [[ $n -lt $max ]]; then
+      ((n++))
+      print_error "Command failed. Attempt $n/$max:"
+      sleep $delay;
+    else
+      fail "The command has failed after $n attempts."
+    fi
+  done
+}
+
 # use UTC for timestamps
 datecmd() {
   # shellcheck disable=SC2068
@@ -78,6 +98,6 @@ src="s3://$(join '/' $S3_SRC_BUCKET $S3_SRC_PREFIX)"
 # shellcheck disable=SC2086
 dst="s3://$(join '/' $S3_BACKUP_BUCKET $S3_BACKUP_PREFIX "$(backup_path)")"
 
-run aws s3 sync "$src" "$dst"
+retry run aws s3 sync "$src" "$dst"
 
 # vim: tabstop=2 shiftwidth=2 expandtab
